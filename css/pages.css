@@ -54,3 +54,17 @@
   margin-bottom: 0.5rem;
   color: #fff;
 }
+
+.member-card span.cargo-fundador   { color: hsl(0, 81%, 25%); font-weight: bold; }
+.member-card span.cargo-lider      { color: hsl(0, 81%, 25%); font-weight: bold; }
+.member-card span.cargo-builder    { color: #ba0aa9; }
+.member-card span.cargo-fazendeiro { color: #12d115; }
+.member-card span.cargo-britadeira { color: #e0aa0b; }
+.member-card span.cargo-minerador  { color: #484242; }
+.member-card span.cargo-rasante    { color: #6a05e6; }
+.member-card span.cargo-slayer     { color: #561679; }
+.member-card span.cargo-pescador   { color: #38bdf8; }
+.member-card span.cargo-alquimista { color: #6d53b9; }
+.member-card span.cargo-dragao     { color: #b84659; }
+.member-card span.cargo-farmer     { color: #a3e635; }
+.member-card span.cargo-recruta    { color: var(--text-secondary); } /* Mantém a cor padrão cinza */
