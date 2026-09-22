@@ -1,28 +1,12 @@
-# =========================================
-# 🔒 Arquivos de Ambiente (CRÍTICO)
-# =========================================
-# NUNCA envie seus arquivos .env para o GitHub!
 .env
-.env.*
-!.env.example
 
-# =========================================
-# 📦 Dependências (Node.js)
-# =========================================
-# Ignora a pasta de pacotes (ela é muito pesada e a Vercel instala tudo sozinha lá na nuvem)
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# =========================================
-# 🚀 Vercel (Se você usar o Vercel CLI localmente)
-# =========================================
 .vercel/
 
-# =========================================
-# 💻 Arquivos de Sistema Operacional
-# =========================================
 .DS_Store
 .DS_Store?
 ._*
