@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juntar-se | Nossa Guilda</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <header>
+        <h1>NOME DA GUILDA</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Sobre Nós</a></li>
+                <li><a href="juntar-se.html">Juntar-se</a></li>
+                <li><a href="membros.html">Membros</a></li>
+                <li><a href="admin.html">Administração</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="glass-card">
+            <h2>Formulário de Recrutamento</h2>
+            <p>Preencha os dados abaixo e aguarde o contato de um administrador.</p>
+            
+            <form id="recrutamento-form">
+                <div class="form-group">
+                    <label for="nick">Seu Nick no Jogo</label>
+                    <input type="text" id="nick" placeholder="Ex: PlayerOne" required>
+                </div>
+                <div class="form-group">
+                    <label for="contato">Contato (Discord / WhatsApp)</label>
+                    <input type="text" id="contato" placeholder="Ex: user#1234 ou (11) 99999-9999" required>
+                </div>
+                <button type="submit" class="btn-submit">Enviar Solicitação</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <a href="https://discord.gg/SEULINKAQUI" target="_blank" class="discord-btn">
+            <img src="assets/discord-logo.svg" alt="Discord">
+            Entrar no Discord
+        </a>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/recrutamento.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+/* Glass Card base */
+.glass-card {
+  background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border); border-radius: 12px;
+  padding: 2.5rem; width: 100%; max-width: 600px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.glass-card p { color: var(--text-secondary); margin: 1rem 0 2rem; line-height: 1.6; }
+
+/* Formulário */
+.form-group { margin-bottom: 1.5rem; text-align: left; }
+.form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+.form-group input {
+  width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.2); color: white; font-size: 1rem; outline: none; transition: border 0.3s;
+}
+.form-group input:focus { border-color: var(--accent-color); background: rgba(0, 0, 0, 0.4); }
+
+.btn-submit {
+  width: 100%; padding: 1rem; background: var(--accent-color); color: white; border: none;
+  border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s;
+}
+.btn-submit:hover { background: var(--accent-hover); }
+
+/* Grid de Membros */
+.members-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem; width: 100%; max-width: 1000px; margin-top: 2rem;
+}
+.member-card {
+  background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
+  border-radius: 12px; padding: 1.5rem; text-align: center; transition: transform 0.3s, border-color 0.3s;
+}
+.member-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+.member-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff; }
+.member-card span { font-size: 0.9rem; color: var(--text-secondary); padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.05); border-radius: 4px; }

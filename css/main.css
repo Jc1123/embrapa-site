@@ -1,0 +1,69 @@
+:root {
+  --bg-color: #0d0d12;
+  --glass-bg: rgba(25, 25, 35, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b0;
+  --accent-color: #5865F2; /* Cor Discord */
+  --accent-hover: #4752C4;
+  --danger-color: #ff4757;
+  --success-color: #2ed573;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', 'Segoe UI', sans-serif; }
+
+body {
+  background-color: var(--bg-color);
+  background-image: url('../assets/wallpaper.webp');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  color: var(--text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Overlay escuro em cima do wallpaper */
+body::before {
+  content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.7); z-index: -1;
+}
+
+/* Navbar */
+header {
+  background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border); padding: 1.2rem 2rem;
+  display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+}
+
+header h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: 1px; }
+
+nav ul { list-style: none; display: flex; gap: 2rem; }
+nav ul li a { color: var(--text-primary); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+nav ul li a:hover, nav ul li a.active { color: var(--accent-color); }
+
+main { flex: 1; padding: 4rem 2rem; display: flex; flex-direction: column; align-items: center; }
+
+/* Footer Discord Centralizado */
+footer {
+  padding: 2rem; display: flex; justify-content: center; align-items: center;
+  background: var(--glass-bg); border-top: 1px solid var(--glass-border); backdrop-filter: blur(12px);
+}
+.discord-btn {
+  display: flex; align-items: center; gap: 0.8rem; background-color: var(--accent-color);
+  color: white; text-decoration: none; padding: 0.8rem 1.5rem; border-radius: 8px;
+  font-weight: 600; transition: transform 0.2s, background 0.3s;
+}
+.discord-btn:hover { background-color: var(--accent-hover); transform: translateY(-2px); }
+.discord-btn img { width: 24px; height: 24px; }
+
+/* Toast / Alertas */
+.toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
+.toast {
+  background: var(--glass-bg); border-left: 4px solid var(--success-color); backdrop-filter: blur(10px);
+  padding: 1rem 1.5rem; border-radius: 6px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  transform: translateX(120%); transition: transform 0.3s ease; color: white; margin-top: 10px;
+}
+.toast.show { transform: translateX(0); }
+.toast.error { border-left-color: var(--danger-color); }

@@ -1,0 +1,53 @@
+/* O admin tem um layout diferente, sobrescrevendo main/header */
+body.admin-body { flex-direction: row; background: #000; background-image: none; height: 100vh; overflow: hidden; }
+body.admin-body::before { display: none; }
+
+.sidebar {
+  width: 250px; background: #080808; border-right: 1px solid #1a1a1a;
+  display: flex; flex-direction: column; padding: 2rem 1rem;
+}
+.sidebar h2 { font-size: 1.2rem; color: #fff; margin-bottom: 2rem; padding-left: 1rem; border-left: 3px solid var(--accent-color); }
+.sidebar-menu { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+.sidebar-menu li { padding: 0.8rem 1rem; border-radius: 6px; cursor: pointer; color: var(--text-secondary); transition: background 0.2s, color 0.2s; }
+.sidebar-menu li:hover, .sidebar-menu li.active { background: #1a1a1a; color: #fff; }
+.logout-btn { color: var(--danger-color); margin-top: auto; padding: 0.8rem 1rem; cursor: pointer; }
+
+.admin-content { flex: 1; padding: 2rem 3rem; overflow-y: auto; background: #0a0a0a; position: relative;}
+.admin-section { display: none; }
+.admin-section.active { display: block; }
+
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #1a1a1a; padding-bottom: 1rem; }
+
+/* Dashboard Cards */
+.metric-card {
+  background: #111; border: 1px solid #222; border-radius: 12px; padding: 2rem;
+  width: fit-content; min-width: 200px;
+}
+.metric-card h3 { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem; }
+.metric-card .number { font-size: 2.5rem; font-weight: 700; color: #fff; }
+
+/* Tables */
+.admin-table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; }
+.admin-table th, .admin-table td { padding: 1rem; text-align: left; border-bottom: 1px solid #222; color: #ccc; }
+.admin-table th { color: var(--text-secondary); font-weight: 500; font-size: 0.9rem; }
+.action-menu { position: relative; display: inline-block; cursor: pointer; font-size: 1.2rem; padding: 0 10px; }
+.action-dropdown {
+  display: none; position: absolute; right: 0; top: 100%; background: #1a1a1a;
+  border: 1px solid #333; border-radius: 6px; z-index: 10; min-width: 150px; overflow: hidden;
+}
+.action-menu:hover .action-dropdown { display: block; }
+.action-dropdown div { padding: 0.8rem 1rem; font-size: 0.85rem; transition: background 0.2s; }
+.action-dropdown div:hover { background: #2a2a2a; color: white; }
+.action-dropdown .text-danger:hover { background: var(--danger-color); }
+.text-danger { color: var(--danger-color); }
+
+/* Modals */
+.modal-overlay {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); justify-content: center; align-items: center; z-index: 1000;
+}
+.modal-overlay.active { display: flex; }
+.modal-box { background: #111; border: 1px solid #333; padding: 2rem; border-radius: 12px; width: 100%; max-width: 400px; }
+.modal-box h3 { margin-bottom: 1.5rem; }
+.btn-success { background: var(--success-color); display: flex; align-items: center; gap: 0.5rem; border: none; padding: 0.6rem 1rem; color: #000; font-weight: 600; border-radius: 6px; cursor: pointer; }
+.btn-cancel { background: transparent; color: white; border: 1px solid #444; padding: 1rem; border-radius: 8px; width: 100%; margin-top: 0.5rem; cursor: pointer; }

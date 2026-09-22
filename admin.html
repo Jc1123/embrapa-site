@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/pages.css"> <!-- Reuso do design do card -->
+</head>
+<body class="admin-body">
+
+    <!-- Modal de Autenticação -->
+    <div id="login-modal" class="modal-overlay" style="display: flex;">
+        <div class="glass-card" style="background: #111; border: 1px solid #333;">
+            <h2 style="margin-bottom: 2rem;">Área Restrita</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Senha de Administração</label>
+                    <input type="password" id="admin-pass" required>
+                </div>
+                <button type="submit" class="btn-submit">Entrar</button>
+            </form>
+            <a href="index.html" style="display:block; margin-top: 1rem; color: #666; text-decoration: none; font-size: 0.9rem;">← Voltar ao site</a>
+        </div>
+    </div>
+
+    <!-- Layout Dashboard -->
+    <div id="admin-panel" style="display: none; width: 100%; height: 100%;">
+        <aside class="sidebar">
+            <h2>Guilda Admin</h2>
+            <ul class="sidebar-menu">
+                <li class="active" data-target="sec-inicio">📊 Início</li>
+                <li data-target="sec-solicitacoes">📩 Solicitações</li>
+                <li data-target="sec-membros">👥 Membros</li>
+            </ul>
+            <div id="logout-btn" class="logout-btn">Sair do Painel</div>
+        </aside>
+
+        <main class="admin-content">
+            
+            <!-- Sec Inicio -->
+            <section id="sec-inicio" class="admin-section active">
+                <div class="section-header"><h2>Visão Geral</h2></div>
+                <div class="metric-card">
+                    <h3>Total de Solicitações</h3>
+                    <div class="number" id="total-solicitacoes">...</div>
+                </div>
+            </section>
+
+            <!-- Sec Solicitações -->
+            <section id="sec-solicitacoes" class="admin-section">
+                <div class="section-header"><h2>Solicitações de Recrutamento</h2></div>
+                
+                <h3 style="margin: 2rem 0 1rem; color: #fff;">Pendentes</h3>
+                <table class="admin-table">
+                    <thead><tr><th>Nick</th><th>Contato</th><th>Data/Hora</th><th>Ações</th></tr></thead>
+                    <tbody id="tbody-pendentes"></tbody>
+                </table>
+
+                <h3 style="margin: 3rem 0 1rem; color: #888;">Concluídas</h3>
+                <table class="admin-table" style="opacity: 0.7;">
+                    <thead><tr><th>Nick</th><th>Contato</th><th>Data/Hora</th><th>Ações</th></tr></thead>
+                    <tbody id="tbody-concluidas"></tbody>
+                </table>
+            </section>
+
+            <!-- Sec Membros -->
+            <section id="sec-membros" class="admin-section">
+                <div class="section-header">
+                    <h2>Gestão de Membros</h2>
+                    <button id="btn-novo-membro" class="btn-success">➕ Novo Membro</button>
+                </div>
+                <table class="admin-table">
+                    <thead><tr><th>Nick</th><th>Cargo</th><th>Ações</th></tr></thead>
+                    <tbody id="tbody-membros"></tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Adicionar Membro -->
+    <div id="modal-novo-membro" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Adicionar Membro</h3>
+            <form id="form-novo-membro">
+                <div class="form-group">
+                    <label>Nick</label>
+                    <input type="text" id="novo-nick" required>
+                </div>
+                <div class="form-group">
+                    <label>Cargo</label>
+                    <input type="text" id="novo-cargo" required>
+                </div>
+                <button type="submit" id="btn-salvar-membro" class="btn-submit" style="background: var(--success-color); color: #000;">Salvar Membro</button>
+                <button type="button" id="btn-fechar-modal" class="btn-cancel">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
