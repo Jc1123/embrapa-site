@@ -151,6 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>
                     <div class="action-menu">⋮
                         <div class="action-dropdown">
+                            <div onclick="abrirModalEdicao('${item.id}', '${item.nick}', '${item.cargo}')">Alterar</div>
                             <div class="text-danger" onclick="deleteMembro('${item.id}')">Excluir</div>
                         </div>
                     </div>
@@ -167,29 +168,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Modal de Novo Membro
+    // Modal de Novo/Alterar Membro
     const modalNovoMembro = document.getElementById('modal-novo-membro');
-    document.getElementById('btn-novo-membro').addEventListener('click', () => modalNovoMembro.classList.add('active'));
+    
+    // Abrir Modal para ADICIONAR (Zera os campos e o ID)
+    document.getElementById('btn-novo-membro').addEventListener('click', () => {
+        document.getElementById('modal-membro-titulo').innerText = 'Adicionar Membro';
+        document.getElementById('form-novo-membro').reset();
+        document.getElementById('membro-id').value = ''; 
+        modalNovoMembro.classList.add('active');
+    });
+
+    // Função global para abrir Modal para ALTERAR (Preenche os campos e o ID)
+    window.abrirModalEdicao = (id, nick, cargo) => {
+        document.getElementById('modal-membro-titulo').innerText = 'Alterar Membro';
+        document.getElementById('membro-id').value = id;
+        document.getElementById('novo-nick').value = nick;
+        document.getElementById('novo-cargo').value = cargo;
+        modalNovoMembro.classList.add('active');
+    };
+
+    // Fechar Modal cancelando a operação
     document.getElementById('btn-fechar-modal').addEventListener('click', () => modalNovoMembro.classList.remove('active'));
 
+    // Lógica do botão Salvar (Decide entre Criar e Atualizar)
     document.getElementById('form-novo-membro').addEventListener('submit', async (e) => {
         e.preventDefault();
+        const id = document.getElementById('membro-id').value;
         const nick = document.getElementById('novo-nick').value;
         const cargo = document.getElementById('novo-cargo').value;
         const btn = document.getElementById('btn-salvar-membro');
         btn.disabled = true;
 
+        // Se tem ID, é PUT (atualizar), se não tem, é POST (criar)
+        const method = id ? 'PUT' : 'POST';
+        const bodyData = id ? { id, nick, cargo } : { nick, cargo };
+
         const res = await fetch(`${window.API_BASE}/membros-admin`, {
-            method: 'POST',
+            method: method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nick, cargo })
+            body: JSON.stringify(bodyData)
         });
 
         if (res.ok) {
-            window.showToast('Membro adicionado!');
+            window.showToast(id ? 'Membro alterado com sucesso!' : 'Membro adicionado!');
             document.getElementById('form-novo-membro').reset();
+            document.getElementById('membro-id').value = '';
             modalNovoMembro.classList.remove('active');
-            loadMembros();
+            loadMembros(); // Atualiza a tabela do painel na hora
         } else {
             window.showToast('Erro ao salvar membro', true);
         }

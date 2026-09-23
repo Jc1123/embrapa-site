@@ -79,11 +79,14 @@
         </main>
     </div>
 
-    <!-- Modal Adicionar Membro -->
+    <!-- Modal Adicionar/Alterar Membro -->
     <div id="modal-novo-membro" class="modal-overlay">
         <div class="modal-box">
-            <h3>Adicionar Membro</h3>
+            <h3 id="modal-membro-titulo">Adicionar Membro</h3>
             <form id="form-novo-membro">
+                <!-- Campo oculto para guardar o ID do membro na hora de editar -->
+                <input type="hidden" id="membro-id">
+                
                 <div class="form-group">
                     <label>Nick</label>
                     <input type="text" id="novo-nick" required>
