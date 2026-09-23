@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn: document.getElementById('logout-btn'),
         totalSolicitacoes: document.getElementById('total-solicitacoes'),
         totalCargos: document.getElementById('total-cargos'),
+        totalMembros: document.getElementById('total-membros'),
         tbodyPendentes: document.getElementById('tbody-pendentes'),
         tbodyConcluidas: document.getElementById('tbody-concluidas'),
         tbodyMembros: document.getElementById('tbody-membros'),
@@ -150,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initDashboard() {
         await Promise.all([
             loadSolicitacoesStats(),
+            loadMembrosStats(),
             loadCargos({ renderTable: false })
         ]);
     }
@@ -161,6 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             handleApiError(error, 'Erro ao carregar estatísticas');
             if (els.totalSolicitacoes) els.totalSolicitacoes.textContent = '—';
+        }
+    }
+
+    async function loadMembrosStats() {
+        try {
+            const data = await window.apiFetch('/membros');
+            if (els.totalMembros) els.totalMembros.textContent = String(data.length);
+        } catch (error) {
+            handleApiError(error, 'Erro ao carregar total de membros');
+            if (els.totalMembros) els.totalMembros.textContent = '—';
         }
     }
 
