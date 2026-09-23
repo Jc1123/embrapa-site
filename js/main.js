@@ -1,5 +1,6 @@
-// Destaca o link ativo na navegação
+// Destaca o link ativo na navegação e inicializa funções globais
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Destacar link ativo
     const currentPage = window.location.pathname.split('/').pop() || 'index.html';
     const navLinks = document.querySelectorAll('nav ul li a');
     
@@ -9,21 +10,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Sistema de Status do Servidor Armageddon
+    // 2. Iniciar Sistema de Status do Servidor Armageddon
+    checkServer();
+    setInterval(checkServer, 60000); // Atualiza a cada 1 minuto
+});
+
+// Função de verificação do status do servidor (fora do DOMContentLoaded)
 async function checkServer() {
-    // verifica se o elemento existe na página atual para não dar erro em outras páginas
     const playersText = document.getElementById('server-players');
-    if (!playersText) return; 
+    const dot = document.getElementById('server-dot');
+    
+    // Verifica se os elementos existem na página atual para não dar erro
+    if (!playersText || !dot) return; 
 
     try {
         const res = await fetch('https://api.mcsrvstat.us/3/armamc.com');
         const data = await res.json();
-        const dot = document.getElementById('server-dot');
 
         if (data.online) {
             dot.style.background = '#4ade80'; // Verde
             dot.style.boxShadow = '0 0 15px #4ade80';
-            playersText.innerHTML = `<span style="color:#4ade80;">Online</span> • ${data.players.online} / ${data.players.max} jogadores`;
+            
+            const onlineCount = data.players ? data.players.online : '?';
+            const maxCount = data.players ? data.players.max : '?';
+            
+            playersText.innerHTML = `<span style="color:#4ade80;">Online</span> • ${onlineCount} / ${maxCount} jogadores`;
         } else {
             dot.style.background = '#ff3b3b'; // Vermelho
             dot.style.boxShadow = '0 0 15px #ff3b3b';
@@ -31,12 +42,6 @@ async function checkServer() {
         }
     } catch (e) {
         playersText.innerText = 'Erro ao buscar status';
+        if (dot) dot.style.background = '#ff3b3b';
     }
 }
-
-// Executa ao carregar a página e depois a cada 1 minuto
-document.addEventListener('DOMContentLoaded', () => {
-    checkServer();
-    setInterval(checkServer, 60000); 
-});
-});
