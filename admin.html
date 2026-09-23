@@ -60,6 +60,11 @@
                         👥 Membros
                     </button>
                 </li>
+                <li>
+                    <button type="button" data-target="sec-cargos" role="tab" aria-selected="false">
+                        🏷️ Cargos
+                    </button>
+                </li>
             </ul>
 
             <button type="button" id="logout-btn" class="logout-btn">Sair do Painel</button>
@@ -71,9 +76,15 @@
                     <h2>Visão Geral</h2>
                 </div>
 
-                <div class="metric-card">
-                    <h3>Total de Solicitações</h3>
-                    <div class="number" id="total-solicitacoes">...</div>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h3>Total de Solicitações</h3>
+                        <div class="number" id="total-solicitacoes">...</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Cargos cadastrados</h3>
+                        <div class="number" id="total-cargos">...</div>
+                    </div>
                 </div>
             </section>
 
@@ -115,7 +126,10 @@
 
             <section id="sec-membros" class="admin-section">
                 <div class="section-header">
-                    <h2>Gestão de Membros</h2>
+                    <div>
+                        <h2>Gestão de Membros</h2>
+                        <p class="section-description">A lista segue a prioridade configurada em Cargos.</p>
+                    </div>
 
                     <button id="btn-novo-membro" type="button" class="btn-success">
                         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -135,6 +149,36 @@
                             </tr>
                         </thead>
                         <tbody id="tbody-membros"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="sec-cargos" class="admin-section">
+                <div class="section-header">
+                    <div>
+                        <h2>Gestão de Cargos</h2>
+                        <p class="section-description">Quanto menor o número da prioridade, mais acima o cargo aparece.</p>
+                    </div>
+
+                    <button id="btn-novo-cargo" type="button" class="btn-success">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
+                        </svg>
+                        Novo Cargo
+                    </button>
+                </div>
+
+                <div class="table-wrap">
+                    <table class="admin-table cargos-table">
+                        <thead>
+                            <tr>
+                                <th>Prioridade</th>
+                                <th>Cargo</th>
+                                <th>Cor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-cargos"></tbody>
                     </table>
                 </div>
             </section>
@@ -163,20 +207,7 @@
                 <div class="form-group">
                     <label for="novo-cargo">Cargo</label>
                     <select id="novo-cargo" required>
-                        <option value="">Selecione um cargo</option>
-                        <option value="Fundador">Fundador</option>
-                        <option value="Líder">Líder</option>
-                        <option value="Builder">Builder</option>
-                        <option value="Fazendeiro">Fazendeiro</option>
-                        <option value="Britadeira">Britadeira</option>
-                        <option value="Minerador">Minerador</option>
-                        <option value="Rasante">Rasante</option>
-                        <option value="Slayer">Slayer</option>
-                        <option value="Pescador">Pescador</option>
-                        <option value="Alquimista">Alquimista</option>
-                        <option value="Dragão">Dragão</option>
-                        <option value="Farmer">Farmer</option>
-                        <option value="Recruta">Recruta</option>
+                        <option value="">Carregando cargos...</option>
                     </select>
                 </div>
 
@@ -197,6 +228,48 @@
 
                 <button type="submit" id="btn-salvar-membro" class="btn-submit">Salvar Membro</button>
                 <button type="button" id="btn-fechar-modal" class="btn-cancel">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+    <div
+        id="modal-cargo"
+        class="modal-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-cargo-titulo"
+        aria-hidden="true"
+    >
+        <div class="modal-box cargo-modal-box">
+            <h3 id="modal-cargo-titulo">Adicionar Cargo</h3>
+
+            <form id="form-cargo">
+                <input type="hidden" id="cargo-nome-original">
+
+                <div class="form-group">
+                    <label for="cargo-nome">Nome do Cargo</label>
+                    <input type="text" id="cargo-nome" maxlength="40" required>
+                </div>
+
+                <div class="cargo-form-grid">
+                    <div class="form-group">
+                        <label for="cargo-cor">Cor</label>
+                        <input type="color" id="cargo-cor" value="#B2B2C0" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cargo-prioridade">Prioridade</label>
+                        <input type="number" id="cargo-prioridade" min="1" max="9999" step="1" required>
+                    </div>
+                </div>
+
+                <div class="cargo-preview-box">
+                    <span>Prévia:</span>
+                    <span id="cargo-preview" class="cargo-badge">Novo Cargo</span>
+                </div>
+
+                <button type="submit" id="btn-salvar-cargo" class="btn-submit">Salvar Cargo</button>
+                <button type="button" id="btn-fechar-cargo" class="btn-cancel">Cancelar</button>
             </form>
         </div>
     </div>

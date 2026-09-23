@@ -7,35 +7,13 @@ import {
     setNoStore
 } from './_utils.js';
 
-const CARGOS_VALIDOS = new Set([
-    'Fundador',
-    'Líder',
-    'Builder',
-    'Fazendeiro',
-    'Britadeira',
-    'Minerador',
-    'Rasante',
-    'Slayer',
-    'Pescador',
-    'Alquimista',
-    'Dragão',
-    'Farmer',
-    'Recruta'
-]);
-
 function parseMember(body = {}) {
     const nick = normalizeText(body.nick, { min: 1, max: 32 });
     const cargo = normalizeText(body.cargo, { min: 1, max: 40 });
-    const bio = normalizeText(body.bio ?? '', { min: 0, max: 500 });
+    const bio = normalizeText(body.bio ?? '', { min: 0, max: 400 });
     const dataEntrou = normalizeText(body.data_entrou ?? '', { min: 0, max: 20 });
 
-    if (
-        !nick ||
-        !cargo ||
-        !CARGOS_VALIDOS.has(cargo) ||
-        bio === null ||
-        dataEntrou === null
-    ) {
+    if (!nick || !cargo || bio === null || dataEntrou === null) {
         return null;
     }
 
@@ -45,6 +23,21 @@ function parseMember(body = {}) {
         bio,
         data_entrou: dataEntrou || null
     };
+}
+
+async function cargoExiste(nome) {
+    const { data, error } = await supabase
+        .from('cargos')
+        .select('nome')
+        .eq('nome', nome)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Erro ao validar cargo:', error);
+        throw new Error('Erro ao validar cargo');
+    }
+
+    return Boolean(data);
 }
 
 export default async function handler(req, res) {
@@ -59,6 +52,14 @@ export default async function handler(req, res) {
 
         if (!member) {
             return res.status(400).json({ error: 'Dados do membro inválidos' });
+        }
+
+        try {
+            if (!(await cargoExiste(member.cargo))) {
+                return res.status(400).json({ error: 'Cargo inexistente' });
+            }
+        } catch {
+            return res.status(500).json({ error: 'Erro ao validar cargo' });
         }
 
         const { data, error } = await supabase
@@ -81,6 +82,14 @@ export default async function handler(req, res) {
 
         if (!id || !member) {
             return res.status(400).json({ error: 'Dados do membro inválidos' });
+        }
+
+        try {
+            if (!(await cargoExiste(member.cargo))) {
+                return res.status(400).json({ error: 'Cargo inexistente' });
+            }
+        } catch {
+            return res.status(500).json({ error: 'Erro ao validar cargo' });
         }
 
         const { data, error } = await supabase

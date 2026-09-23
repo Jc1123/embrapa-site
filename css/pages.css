@@ -369,3 +369,39 @@
         grid-template-columns: 1fr;
     }
 }
+
+
+/* Cargos dinâmicos: cor vem do banco/Supabase */
+.cargo-badge {
+    --cargo-color: #b2b2c0;
+    --cargo-contrast: #111111;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--cargo-color) 42%, transparent);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--cargo-color) 14%, rgba(255,255,255,0.04));
+    color: var(--cargo-color);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.filter-btn.cargo-filter {
+    --cargo-color: var(--text-secondary);
+    --cargo-contrast: #111111;
+    border-color: color-mix(in srgb, var(--cargo-color) 55%, #333);
+    color: var(--cargo-color);
+}
+
+.filter-btn.cargo-filter:hover {
+    border-color: var(--cargo-color);
+    color: var(--cargo-color);
+    background: color-mix(in srgb, var(--cargo-color) 12%, transparent);
+}
+
+.filter-btn.cargo-filter.active {
+    border-color: var(--cargo-color);
+    background: var(--cargo-color);
+    color: var(--cargo-contrast);
+}

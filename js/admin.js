@@ -6,9 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
         adminPass: document.getElementById('admin-pass'),
         logoutBtn: document.getElementById('logout-btn'),
         totalSolicitacoes: document.getElementById('total-solicitacoes'),
+        totalCargos: document.getElementById('total-cargos'),
         tbodyPendentes: document.getElementById('tbody-pendentes'),
         tbodyConcluidas: document.getElementById('tbody-concluidas'),
         tbodyMembros: document.getElementById('tbody-membros'),
+        tbodyCargos: document.getElementById('tbody-cargos'),
+
         modalMembro: document.getElementById('modal-novo-membro'),
         modalTitulo: document.getElementById('modal-membro-titulo'),
         formMembro: document.getElementById('form-novo-membro'),
@@ -19,16 +22,31 @@ document.addEventListener('DOMContentLoaded', () => {
         inputData: document.getElementById('input-data'),
         btnNovoMembro: document.getElementById('btn-novo-membro'),
         btnFecharModal: document.getElementById('btn-fechar-modal'),
-        btnSalvarMembro: document.getElementById('btn-salvar-membro')
+        btnSalvarMembro: document.getElementById('btn-salvar-membro'),
+
+        modalCargo: document.getElementById('modal-cargo'),
+        modalCargoTitulo: document.getElementById('modal-cargo-titulo'),
+        formCargo: document.getElementById('form-cargo'),
+        cargoNomeOriginal: document.getElementById('cargo-nome-original'),
+        cargoNome: document.getElementById('cargo-nome'),
+        cargoCor: document.getElementById('cargo-cor'),
+        cargoPrioridade: document.getElementById('cargo-prioridade'),
+        cargoPreview: document.getElementById('cargo-preview'),
+        btnNovoCargo: document.getElementById('btn-novo-cargo'),
+        btnFecharCargo: document.getElementById('btn-fechar-cargo'),
+        btnSalvarCargo: document.getElementById('btn-salvar-cargo')
     };
 
     let ultimoFoco = null;
+    let cargosCache = [];
 
     function assertRequiredElements() {
         const required = [
             'loginModal', 'adminPanel', 'loginForm', 'adminPass', 'logoutBtn',
             'modalMembro', 'formMembro', 'membroId', 'novoNick', 'novoCargo',
-            'inputBio', 'inputData', 'btnNovoMembro', 'btnFecharModal', 'btnSalvarMembro'
+            'inputBio', 'inputData', 'btnNovoMembro', 'btnFecharModal', 'btnSalvarMembro',
+            'modalCargo', 'formCargo', 'cargoNomeOriginal', 'cargoNome', 'cargoCor',
+            'cargoPrioridade', 'cargoPreview', 'btnNovoCargo', 'btnFecharCargo', 'btnSalvarCargo'
         ];
 
         const missing = required.filter(name => !els[name]);
@@ -119,22 +137,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (tab.dataset.target === 'sec-membros') {
+                await garantirCargosCarregados();
                 await loadMembros();
+            }
+
+            if (tab.dataset.target === 'sec-cargos') {
+                await loadCargos({ renderTable: true });
             }
         });
     });
 
     async function initDashboard() {
-        await loadSolicitacoesStats();
+        await Promise.all([
+            loadSolicitacoesStats(),
+            loadCargos({ renderTable: false })
+        ]);
     }
 
     async function loadSolicitacoesStats() {
         try {
             const data = await window.apiFetch('/solicitacoes');
-            els.totalSolicitacoes.textContent = String(data.length);
+            if (els.totalSolicitacoes) els.totalSolicitacoes.textContent = String(data.length);
         } catch (error) {
             handleApiError(error, 'Erro ao carregar estatísticas');
-            els.totalSolicitacoes.textContent = '—';
+            if (els.totalSolicitacoes) els.totalSolicitacoes.textContent = '—';
         }
     }
 
@@ -234,9 +260,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             data.forEach(item => {
                 const tr = document.createElement('tr');
-
                 tr.appendChild(createCell(item.nick));
-                tr.appendChild(createCell(item.cargo));
+
+                const cargoCell = document.createElement('td');
+                cargoCell.appendChild(criarCargoBadge(item.cargo, item.cargo_cor));
+                tr.appendChild(cargoCell);
 
                 const actionsCell = document.createElement('td');
                 actionsCell.appendChild(
@@ -279,21 +307,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    els.btnNovoMembro.addEventListener('click', () => {
+    els.btnNovoMembro.addEventListener('click', async () => {
         ultimoFoco = document.activeElement;
+        await garantirCargosCarregados();
+
         els.modalTitulo.textContent = 'Adicionar Membro';
         els.formMembro.reset();
         els.membroId.value = '';
+        preencherSelectCargos('');
         abrirModalMembro();
     });
 
-    function abrirModalEdicao(membro) {
+    async function abrirModalEdicao(membro) {
         ultimoFoco = document.activeElement;
+        await garantirCargosCarregados();
 
         els.modalTitulo.textContent = 'Alterar Membro';
         els.membroId.value = membro.id ?? '';
         els.novoNick.value = membro.nick ?? '';
-        els.novoCargo.value = membro.cargo ?? '';
+        preencherSelectCargos(membro.cargo ?? '');
         els.inputBio.value = membro.bio ?? '';
         els.inputData.value = normalizeDateForInput(membro.data_entrou);
 
@@ -318,20 +350,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === els.modalMembro) fecharModalMembro();
     });
 
-    document.addEventListener('keydown', event => {
-        if (event.key === 'Escape' && els.modalMembro.classList.contains('active')) {
-            fecharModalMembro();
-        }
-    });
-
     els.formMembro.addEventListener('submit', async event => {
         event.preventDefault();
 
         const id = els.membroId.value.trim();
-
         const dadosMembro = {
             nick: els.novoNick.value.trim(),
-            cargo: els.novoCargo.value.trim(),
+            cargo: els.novoCargo.value,
             bio: els.inputBio.value.trim(),
             data_entrou: els.inputData.value
         };
@@ -362,6 +387,271 @@ document.addEventListener('DOMContentLoaded', () => {
         } finally {
             els.btnSalvarMembro.disabled = false;
             els.btnSalvarMembro.textContent = 'Salvar Membro';
+        }
+    });
+
+    async function garantirCargosCarregados() {
+        if (cargosCache.length === 0) {
+            await loadCargos({ renderTable: false });
+        }
+    }
+
+    async function loadCargos({ renderTable = true } = {}) {
+        if (renderTable && els.tbodyCargos) {
+            showTableLoading(els.tbodyCargos, 4);
+        }
+
+        try {
+            cargosCache = await window.apiFetch('/cargos');
+            cargosCache.sort(ordenarCargos);
+            preencherSelectCargos(els.novoCargo.value);
+
+            if (els.totalCargos) {
+                els.totalCargos.textContent = String(cargosCache.length);
+            }
+
+            if (renderTable && els.tbodyCargos) {
+                renderCargosTable();
+            }
+        } catch (error) {
+            handleApiError(error, 'Erro ao carregar cargos');
+            if (els.totalCargos) els.totalCargos.textContent = '—';
+            if (renderTable && els.tbodyCargos) {
+                showTableMessage(els.tbodyCargos, 4, 'Erro ao carregar cargos.');
+            }
+        }
+    }
+
+    function ordenarCargos(a, b) {
+        return Number(a.prioridade) - Number(b.prioridade) ||
+            a.nome.localeCompare(b.nome, 'pt-BR');
+    }
+
+    function preencherSelectCargos(valorSelecionado = '') {
+        els.novoCargo.textContent = '';
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = cargosCache.length
+            ? 'Selecione um cargo'
+            : 'Nenhum cargo cadastrado';
+        els.novoCargo.appendChild(placeholder);
+
+        cargosCache
+            .slice()
+            .sort(ordenarCargos)
+            .forEach(cargo => {
+                const option = document.createElement('option');
+                option.value = cargo.nome;
+                option.textContent = `${cargo.prioridade}. ${cargo.nome}`;
+                els.novoCargo.appendChild(option);
+            });
+
+        els.novoCargo.value = valorSelecionado;
+    }
+
+    function renderCargosTable() {
+        els.tbodyCargos.textContent = '';
+
+        cargosCache
+            .slice()
+            .sort(ordenarCargos)
+            .forEach(cargo => {
+                const tr = document.createElement('tr');
+                tr.appendChild(createCell(cargo.prioridade));
+
+                const nameCell = document.createElement('td');
+                nameCell.appendChild(criarCargoBadge(cargo.nome, cargo.cor));
+                tr.appendChild(nameCell);
+
+                const colorCell = document.createElement('td');
+                const colorWrap = document.createElement('div');
+                colorWrap.className = 'cargo-color-cell';
+
+                const swatch = document.createElement('span');
+                swatch.className = 'cargo-color-swatch';
+                swatch.style.backgroundColor = cargo.cor;
+
+                const code = document.createElement('code');
+                code.textContent = cargo.cor;
+
+                colorWrap.append(swatch, code);
+                colorCell.appendChild(colorWrap);
+                tr.appendChild(colorCell);
+
+                const actionsCell = document.createElement('td');
+                actionsCell.appendChild(
+                    createActionMenu([
+                        {
+                            label: 'Alterar',
+                            onClick: () => abrirModalEdicaoCargo(cargo)
+                        },
+                        {
+                            label: 'Excluir',
+                            danger: true,
+                            onClick: () => deleteCargo(cargo.nome)
+                        }
+                    ])
+                );
+
+                tr.appendChild(actionsCell);
+                els.tbodyCargos.appendChild(tr);
+            });
+
+        ensureEmptyRow(els.tbodyCargos, 4, 'Nenhum cargo cadastrado.');
+    }
+
+    els.btnNovoCargo.addEventListener('click', () => {
+        ultimoFoco = document.activeElement;
+        els.modalCargoTitulo.textContent = 'Adicionar Cargo';
+        els.formCargo.reset();
+        els.cargoNomeOriginal.value = '';
+        els.cargoCor.value = '#B2B2C0';
+        els.cargoPrioridade.value = String(proximaPrioridade());
+        atualizarPreviewCargo();
+        abrirModalCargo();
+    });
+
+    function abrirModalEdicaoCargo(cargo) {
+        ultimoFoco = document.activeElement;
+        els.modalCargoTitulo.textContent = 'Alterar Cargo';
+        els.cargoNomeOriginal.value = cargo.nome;
+        els.cargoNome.value = cargo.nome;
+        els.cargoCor.value = normalizarCor(cargo.cor);
+        els.cargoPrioridade.value = String(cargo.prioridade);
+        atualizarPreviewCargo();
+        abrirModalCargo();
+    }
+
+    function abrirModalCargo() {
+        els.modalCargo.classList.add('active');
+        els.modalCargo.setAttribute('aria-hidden', 'false');
+        els.cargoNome.focus();
+    }
+
+    function fecharModalCargo() {
+        els.modalCargo.classList.remove('active');
+        els.modalCargo.setAttribute('aria-hidden', 'true');
+        ultimoFoco?.focus?.();
+    }
+
+    els.btnFecharCargo.addEventListener('click', fecharModalCargo);
+
+    els.modalCargo.addEventListener('click', event => {
+        if (event.target === els.modalCargo) fecharModalCargo();
+    });
+
+    els.cargoNome.addEventListener('input', atualizarPreviewCargo);
+    els.cargoCor.addEventListener('input', atualizarPreviewCargo);
+
+    els.formCargo.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const nomeAtual = els.cargoNomeOriginal.value.trim();
+        const dadosCargo = {
+            nome: els.cargoNome.value.trim(),
+            cor: els.cargoCor.value.toUpperCase(),
+            prioridade: Number(els.cargoPrioridade.value)
+        };
+
+        if (
+            !dadosCargo.nome ||
+            !/^#[0-9A-F]{6}$/.test(dadosCargo.cor) ||
+            !Number.isInteger(dadosCargo.prioridade) ||
+            dadosCargo.prioridade < 1 ||
+            dadosCargo.prioridade > 9999
+        ) {
+            window.showToast('Revise nome, cor e prioridade do cargo.', true);
+            return;
+        }
+
+        els.btnSalvarCargo.disabled = true;
+        els.btnSalvarCargo.textContent = 'Salvando...';
+
+        try {
+            if (nomeAtual) dadosCargo.nome_atual = nomeAtual;
+
+            await window.apiFetch('/cargos', {
+                method: nomeAtual ? 'PUT' : 'POST',
+                body: JSON.stringify(dadosCargo)
+            });
+
+            window.showToast(nomeAtual ? 'Cargo alterado com sucesso!' : 'Cargo criado com sucesso!');
+            fecharModalCargo();
+            await loadCargos({ renderTable: true });
+            await loadMembros();
+        } catch (error) {
+            handleApiError(error, 'Erro ao salvar cargo');
+        } finally {
+            els.btnSalvarCargo.disabled = false;
+            els.btnSalvarCargo.textContent = 'Salvar Cargo';
+        }
+    });
+
+    async function deleteCargo(nome) {
+        if (!window.confirm(`Excluir o cargo "${nome}"?`)) return;
+
+        try {
+            await window.apiFetch(`/cargos?nome=${encodeURIComponent(nome)}`, {
+                method: 'DELETE'
+            });
+
+            window.showToast('Cargo excluído.');
+            await loadCargos({ renderTable: true });
+        } catch (error) {
+            handleApiError(error, 'Erro ao excluir cargo');
+        }
+    }
+
+    function proximaPrioridade() {
+        if (!cargosCache.length) return 1;
+        const maior = Math.max(...cargosCache.map(cargo => Number(cargo.prioridade) || 0));
+        return Math.min(maior + 1, 9999);
+    }
+
+    function atualizarPreviewCargo() {
+        els.cargoPreview.textContent = els.cargoNome.value.trim() || 'Novo Cargo';
+        aplicarCorCargo(els.cargoPreview, els.cargoCor.value);
+    }
+
+    function criarCargoBadge(nome, cor) {
+        const badge = document.createElement('span');
+        badge.className = 'cargo-badge';
+        badge.textContent = nome || 'Sem cargo';
+        aplicarCorCargo(badge, cor);
+        return badge;
+    }
+
+    function aplicarCorCargo(elemento, cor) {
+        const hex = normalizarCor(cor);
+        elemento.style.setProperty('--cargo-color', hex);
+        elemento.style.setProperty('--cargo-contrast', corDeContraste(hex));
+    }
+
+    function normalizarCor(cor) {
+        return /^#[0-9a-fA-F]{6}$/.test(String(cor || ''))
+            ? String(cor).toUpperCase()
+            : '#B2B2C0';
+    }
+
+    function corDeContraste(hex) {
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        const luminancia = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminancia > 0.58 ? '#111111' : '#FFFFFF';
+    }
+
+    document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+
+        if (els.modalCargo.classList.contains('active')) {
+            fecharModalCargo();
+            return;
+        }
+
+        if (els.modalMembro.classList.contains('active')) {
+            fecharModalMembro();
         }
     });
 
