@@ -145,13 +145,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         tbody.innerHTML = '';
         data.forEach(item => {
             const tr = document.createElement('tr');
+            // Proteção para garantir que as aspas não quebrem a função ao passar strings com apóstrofos/espaços
+            const bioSegura = (item.bio || '').replace(/'/g, "\\'");
+            const dataSegura = (item.data_entrou || '').replace(/'/g, "\\'");
+
             tr.innerHTML = `
                 <td>${item.nick}</td>
                 <td>${item.cargo}</td>
                 <td>
                     <div class="action-menu">⋮
                         <div class="action-dropdown">
-                            <div onclick="abrirModalEdicao('${item.id}', '${item.nick}', '${item.cargo}')">Alterar</div>
+                            <div onclick="abrirModalEdicao('${item.id}', '${item.nick}', '${item.cargo}', '${bioSegura}', '${dataSegura}')">Alterar</div>
                             <div class="text-danger" onclick="deleteMembro('${item.id}')">Excluir</div>
                         </div>
                     </div>
@@ -180,11 +184,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Função global para abrir Modal para ALTERAR (Preenche os campos e o ID)
-    window.abrirModalEdicao = (id, nick, cargo) => {
+    window.abrirModalEdicao = (id, nick, cargo, bio, dataEntrou) => {
         document.getElementById('modal-membro-titulo').innerText = 'Alterar Membro';
         document.getElementById('membro-id').value = id;
         document.getElementById('novo-nick').value = nick;
         document.getElementById('novo-cargo').value = cargo;
+        document.getElementById('input-bio').value = bio && bio !== 'undefined' ? bio : '';
+        document.getElementById('input-data').value = dataEntrou && dataEntrou !== 'undefined' ? dataEntrou : '';
         modalNovoMembro.classList.add('active');
     };
 
@@ -195,19 +201,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('form-novo-membro').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('membro-id').value;
-        const nick = document.getElementById('novo-nick').value;
-        const cargo = document.getElementById('novo-cargo').value;
         const btn = document.getElementById('btn-salvar-membro');
         btn.disabled = true;
 
-        // Se tem ID, é PUT (atualizar), se não tem, é POST (criar)
+        // Estrutura com os campos novos solicitados
+        const dadosMembro = {
+            nick: document.getElementById('novo-nick').value,
+            cargo: document.getElementById('novo-cargo').value,
+            bio: document.getElementById('input-bio').value,
+            data_entrou: document.getElementById('input-data').value
+        };
+
+        // Se tem ID, adicionamos no objeto para a API saber quem atualizar via PUT
+        if (id) {
+            dadosMembro.id = id;
+        }
+
         const method = id ? 'PUT' : 'POST';
-        const bodyData = id ? { id, nick, cargo } : { nick, cargo };
 
         const res = await fetch(`${window.API_BASE}/membros-admin`, {
             method: method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(bodyData)
+            body: JSON.stringify(dadosMembro)
         });
 
         if (res.ok) {

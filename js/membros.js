@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==========================================
-    // --- LÓGICA DO MODAL DE PERFIL (FASE 2) ---
+    // --- LÓGICA DO MODAL DE PERFIL (FASE 2/3) ---
     // ==========================================
     const modalPerfil = document.getElementById('modal-perfil');
     const btnFecharPerfil = document.getElementById('fechar-perfil');
@@ -149,6 +149,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const spanCargo = document.getElementById('perfil-cargo');
         spanCargo.textContent = membro.cargo;
         spanCargo.className = cssClass; // Usa a mesma cor gerada pro card
+
+        // Preenche com os dados reais salvos no Supabase (ou usa um texto padrão se estiver vazio)
+        const bioEl = document.getElementById('perfil-bio');
+        const dataEl = document.getElementById('perfil-data');
+
+        if (bioEl) bioEl.textContent = membro.bio || "Um jogador dedicado do clã Armageddon.";
+        if (dataEl) dataEl.textContent = membro.data_entrou || "Não informada";
 
         modalPerfil.classList.add('active');
     }
