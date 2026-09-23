@@ -49,5 +49,42 @@ body.admin-body::before { display: none; }
 .modal-overlay.active { display: flex; }
 .modal-box { background: #111; border: 1px solid #333; padding: 2rem; border-radius: 12px; width: 100%; max-width: 400px; }
 .modal-box h3 { margin-bottom: 1.5rem; }
-.btn-success { background: var(--success-color); display: flex; align-items: center; gap: 0.5rem; border: none; padding: 0.6rem 1rem; color: #000; font-weight: 600; border-radius: 6px; cursor: pointer; }
-.btn-cancel { background: transparent; color: white; border: 1px solid #444; padding: 1rem; border-radius: 8px; width: 100%; margin-top: 0.5rem; cursor: pointer; }
+
+/* --- NOVO ESTILO DO BOTÃO SUCESSO --- */
+.btn-success {
+  background: var(--success-color);
+  color: #050505; /* Um preto levemente suavizado para melhor contraste */
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  border-radius: 8px; /* Arredondamento um pouco mais moderno */
+  cursor: pointer;
+  transition: all 0.3s ease; /* Animação suave para todas as mudanças */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra base para dar profundidade */
+}
+
+.btn-success:hover {
+  transform: translateY(-2px); /* Efeito de elevação */
+  filter: brightness(1.1); /* Deixa a cor levemente mais clara/brilhante */
+  /* Cria uma sombra (glow) com um verde genérico que combina bem */
+  box-shadow: 0 6px 15px rgba(46, 204, 113, 0.3); 
+}
+
+.btn-success:active {
+  transform: translateY(0); /* Afunda ao clicar */
+  filter: brightness(0.9);
+}
+
+.btn-success svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor; /* O ícone herda a cor do texto */
+}
+/* ------------------------------------- */
+
+.btn-cancel { background: transparent; color: white; border: 1px solid #444; padding: 1rem; border-radius: 8px; width: 100%; margin-top: 0.5rem; cursor: pointer; transition: background 0.3s; }
+.btn-cancel:hover { background: rgba(255, 255, 255, 0.05); }
