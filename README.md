@@ -1,0 +1,1 @@
+Como as chaves foram vazadas com um push acidental antes do .gitignore ser criado, elas já foram atualizadas por outras chaves. Ou seja, caso tente utililzar elas para ganhar acesso ao painel, não funcionará.
