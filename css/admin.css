@@ -16,7 +16,15 @@ body.admin-body::before { display: none; }
 .admin-section { display: none; }
 .admin-section.active { display: block; }
 
-.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #1a1a1a; padding-bottom: 1rem; }
+.section-header { 
+    display: flex; 
+    justify-content: space-between; /* Empurra o título para a esquerda e o botão para a direita */
+    align-items: center; 
+    margin-bottom: 2rem; 
+    border-bottom: 1px solid #1a1a1a; 
+    padding-bottom: 1rem;
+    gap: 1.5rem; /* Adiciona um espaço fixo de segurança caso fiquem muito próximos em telas menores */
+}
 
 /* Dashboard Cards */
 .metric-card {
