@@ -24,7 +24,7 @@ async function checkServer() {
     if (!playersText || !dot) return; 
 
     try {
-        const res = await fetch('https://api.mcsrvstat.us/3/armamc.com');
+        const res = await fetch(`https://api.mcsrvstat.us/3/armamc.com?t=${new Date().getTime()}`);
         const data = await res.json();
 
         if (data.online) {
