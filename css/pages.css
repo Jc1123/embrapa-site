@@ -1,190 +1,371 @@
-/* Glass Card base */
 .glass-card {
-  background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-  border: 1px solid var(--glass-border); border-radius: 12px;
-  padding: 2.5rem; width: 100%; max-width: 600px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  text-align: center;
-}
-
-.glass-card p { color: var(--text-secondary); margin: 1rem 0 2rem; line-height: 1.6; }
-
-/* Formulário */
-.form-group { margin-bottom: 1.5rem; text-align: left; }
-.form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
-.form-group input {
-  width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid var(--glass-border);
-  background: rgba(0, 0, 0, 0.2); color: white; font-size: 1rem; outline: none; transition: border 0.3s;
-}
-.form-group input:focus { border-color: var(--accent-color); background: rgba(0, 0, 0, 0.4); }
-
-.btn-submit {
-  width: 100%; padding: 1rem; background: var(--accent-color); color: white; border: none;
-  border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s;
-}
-.btn-submit:hover { background: var(--accent-hover); }
-
-/* Grid de Membros */
-.members-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem; width: 100%; max-width: 1000px; margin-top: 2rem;
-}
-.member-card {
-  background: var(--glass-bg); border: 1px solid var(--glass-border); backdrop-filter: blur(10px);
-  border-radius: 12px; padding: 1.5rem; text-align: center; transition: transform 0.3s, border-color 0.3s;
-}
-.member-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
-.member-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #fff; }
-.member-card span { font-size: 0.9rem; color: var(--text-secondary); padding: 0.2rem 0.6rem; background: rgba(255,255,255,0.05); border-radius: 4px; }
-
-/* Estilo da cabeça do jogador de Minecraft */
-.member-skin {
-  width: 80px;
-  height: 80px;
-  margin-bottom: 1rem; /* Espaçamento entre a imagem e o nick */
-  border-radius: 8px; /* Bordas levemente arredondadas para combinar com o glassmorphis */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Sombra suave para destacar a imagem */
-  object-fit: cover;
-  display: inline-block;
-}
-
-/* Ajuste fino no título para compensar o margin da imagem */
-.member-card h3 {
-  font-size: 1.2rem;
-  margin-top: 0;
-  margin-bottom: 0.5rem;
-  color: #fff;
-}
-
-.member-card span.cargo-fundador   { color: hsl(0, 81%, 25%); font-weight: bold; }
-.member-card span.cargo-lider      { color: hsl(0, 81%, 25%); font-weight: bold; }
-.member-card span.cargo-builder    { color: #ba0aa9; }
-.member-card span.cargo-fazendeiro { color: #12d115; }
-.member-card span.cargo-britadeira { color: #e0aa0b; }
-.member-card span.cargo-minerador  { color: #484242; }
-.member-card span.cargo-rasante    { color: #6a05e6; }
-.member-card span.cargo-slayer     { color: #561679; }
-.member-card span.cargo-pescador   { color: #38bdf8; }
-.member-card span.cargo-alquimista { color: #6d53b9; }
-.member-card span.cargo-dragao     { color: #b84659; }
-.member-card span.cargo-farmer     { color: #a3e635; }
-.member-card span.cargo-recruta    { color: var(--text-secondary); } /* Mantém a cor padrão cinza */
-
-.filter-btn {
-    background: rgba(255, 255, 255, 0.05); border: 1px solid #333; color: var(--text-secondary);
-    padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; transition: all 0.3s;
-}
-.filter-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-.filter-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); font-weight: bold; }
-
-/* Skeleton Loading Animation */
-@keyframes shimmer {
-    0% { background-position: -400px 0; }
-    100% { background-position: 400px 0; }
-}
-.skeleton-card {
-    background: var(--glass-bg); border: 1px solid var(--glass-border);
-    border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center;
-}
-.skeleton-img, .skeleton-text, .skeleton-badge {
-    background: #222;
-    background-image: linear-gradient(90deg, #222 0px, #333 40px, #222 80px);
-    background-size: 800px 100%;
-    animation: shimmer 2s infinite linear;
-    border-radius: 4px;
-}
-.skeleton-img { width: 80px; height: 80px; border-radius: 8px; margin-bottom: 1rem; }
-.skeleton-text { width: 60%; height: 20px; margin-bottom: 0.5rem; }
-.skeleton-badge { width: 40%; height: 25px; border-radius: 15px; }
-
-.modal-overlay {
-    display: none; /* Escondido por padrão */
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8); 
-    backdrop-filter: blur(5px); 
-    -webkit-backdrop-filter: blur(5px);
-    justify-content: center; 
-    align-items: center; 
-    z-index: 9999; /* Garante que fique por cima de tudo na página */
-}
-
-/* Quando a classe 'active' é adicionada pelo JS, ele aparece */
-.modal-overlay.active { 
-    display: flex; 
-}
-
-/* O cartão do perfil em si */
-.perfil-card { 
-    max-width: 450px; 
-    width: 90%; /* Para não colar nas bordas do celular */
-    position: relative; 
-    padding: 2rem; 
-    text-align: left; 
-    background: var(--glass-bg); /* Garanta que está usando as variáveis certas */
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    width: 100%;
+    max-width: 600px;
+    padding: 2.5rem;
     border: 1px solid var(--glass-border);
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    background: var(--glass-bg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    text-align: center;
 }
 
-.btn-fechar { 
-    position: absolute; 
-    top: 15px; 
-    right: 20px; 
-    background: transparent; 
-    border: none; 
-    color: var(--text-secondary); 
-    font-size: 1.8rem; 
-    cursor: pointer; 
-    transition: 0.3s; 
+.glass-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
 }
 
-.btn-fechar:hover { 
-    color: #ff3b3b; 
+.form-group {
+    margin-bottom: 1.25rem;
+    text-align: left;
 }
 
-.perfil-header { 
-    display: flex; 
-    align-items: center; 
-    gap: 1.5rem; 
-    margin-bottom: 2rem; 
-    padding-bottom: 1.5rem; 
-    border-bottom: 1px solid var(--glass-border); 
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
 }
 
-.perfil-skin-large { 
-    width: 100px; 
-    height: 100px; 
-    border-radius: 12px; 
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); 
-    object-fit: cover; 
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.28);
+    color: #fff;
 }
 
-.perfil-info h2 { 
-    font-size: 1.8rem; 
-    margin: 0 0 0.5rem 0; 
-    color: #fff; 
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--accent-color);
 }
 
-.perfil-detalhes { 
-    display: flex; 
-    flex-direction: column; 
-    gap: 1rem; 
+.btn-submit {
+    width: 100%;
+    padding: 1rem;
+    border: 0;
+    background: var(--accent-color);
+    color: #fff;
 }
 
-.detalhe-item { 
-    background: rgba(0,0,0,0.3); 
-    padding: 1rem; 
-    border-radius: 8px; 
-    border: 1px solid rgba(255,255,255,0.05); 
+.btn-submit:disabled,
+.btn-success:disabled,
+.btn-cancel:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
-.detalhe-item strong { 
-    color: var(--text-secondary); 
-    display: inline-block; 
-    min-width: 100px; 
+.members-tools {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: var(--glass-bg);
+    color: #fff;
+}
+
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    padding: 0.55rem 1rem;
+    border: 1px solid #3a3a45;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.filter-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-btn.active {
+    border-color: var(--accent-color);
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.member-card {
+    appearance: none;
+    width: 100%;
+    padding: 1.5rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-bg);
+    color: inherit;
+    text-align: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.member-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-color);
+}
+
+.member-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+}
+
+.member-card > span,
+.perfil-info > span {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.07);
+    font-size: 0.9rem;
+}
+
+.member-skin {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.cargo-fundador,
+.cargo-lider { color: #ff6b6b; font-weight: 700; }
+.cargo-builder { color: #e35bd5; }
+.cargo-fazendeiro { color: #64e56a; }
+.cargo-britadeira { color: #f2c94c; }
+.cargo-minerador { color: #c7c7ce; }
+.cargo-rasante { color: #9e6cff; }
+.cargo-slayer { color: #c084fc; }
+.cargo-pescador { color: #67d5ff; }
+.cargo-alquimista { color: #a78bfa; }
+.cargo-dragao { color: #f0788d; }
+.cargo-farmer { color: #bef264; }
+.cargo-recruta { color: var(--text-secondary); }
+
+@keyframes shimmer {
+    from { background-position: -400px 0; }
+    to { background-position: 400px 0; }
+}
+
+.skeleton-card {
+    padding: 1.5rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.skeleton-img,
+.skeleton-text,
+.skeleton-badge {
+    background: #222 linear-gradient(90deg, #222 0, #333 40px, #222 80px);
+    background-size: 800px 100%;
+    animation: shimmer 2s infinite linear;
+}
+
+.skeleton-img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}
+
+.skeleton-text {
+    width: 60%;
+    height: 20px;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+.skeleton-badge {
+    width: 40%;
+    height: 25px;
+    border-radius: 999px;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.perfil-card {
+    position: relative;
+    max-width: 450px;
+    text-align: left;
+}
+
+.btn-fechar {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    width: 42px;
+    height: 42px;
+    border: 0;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+.btn-fechar:hover {
+    color: var(--danger-color);
+}
+
+.perfil-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.perfil-skin-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.perfil-info h2 {
+    margin: 0 0 0.5rem;
+}
+
+.perfil-detalhes {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.detalhe-item {
+    padding: 1rem;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    background: rgba(0,0,0,0.3);
+}
+
+.detalhe-item strong {
+    display: inline-block;
+    min-width: 100px;
+    color: var(--text-secondary);
+}
+
+.detalhe-item p {
+    margin: 0.5rem 0 0;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    width: 100%;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.wiki-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.wiki-title {
+    margin: 0 0 2rem;
+    text-align: center;
+    font-size: clamp(2rem, 5vw, 2.7rem);
+}
+
+.wiki-section {
+    margin-bottom: 2rem;
+    padding: 2rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+}
+
+.wiki-section h2 {
+    margin-top: 0;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--glass-border);
+    color: var(--accent-color);
+}
+
+.rules-list {
+    padding-left: 1.25rem;
+    color: #d0d0d8;
+    line-height: 1.8;
+}
+
+.cargo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cargo-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    border-left: 4px solid var(--text-secondary);
+    border-radius: 8px;
+    background: rgba(0,0,0,0.3);
+}
+
+@media (max-width: 600px) {
+    .glass-card {
+        padding: 1.5rem;
+    }
+
+    .perfil-header {
+        align-items: flex-start;
+    }
+
+    .perfil-skin-large {
+        width: 80px;
+        height: 80px;
+    }
+
+    .cargo-item {
+        grid-template-columns: 1fr;
+    }
 }

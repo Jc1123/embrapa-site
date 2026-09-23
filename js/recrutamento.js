@@ -1,40 +1,42 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('recrutamento-form');
-    if(!form) return;
+    if (!form) return;
 
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const nick = document.getElementById('nick').value.trim();
-        const contato = document.getElementById('contato').value.trim();
-        const btn = form.querySelector('button');
+    const btn = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        const nick = document.getElementById('nick')?.value.trim() || '';
+        const contato = document.getElementById('contato')?.value.trim() || '';
 
         if (!nick || !contato) {
             window.showToast('Por favor, preencha todos os campos.', true);
             return;
         }
 
+        if (nick.length > 32 || contato.length > 120) {
+            window.showToast('Revise o tamanho dos campos.', true);
+            return;
+        }
+
         btn.disabled = true;
-        btn.innerText = 'Enviando...';
+        btn.textContent = 'Enviando...';
 
         try {
-            const res = await fetch(`${window.API_BASE}/solicitacoes`, {
+            await window.apiFetch('/solicitacoes', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ nick, contato })
             });
 
-            if (res.ok) {
-                window.showToast('Solicitação enviada com sucesso!');
-                form.reset();
-            } else {
-                throw new Error('Erro ao enviar.');
-            }
+            window.showToast('Solicitação enviada com sucesso!');
+            form.reset();
         } catch (error) {
-            window.showToast('Erro ao comunicar com o servidor.', true);
+            console.error(error);
+            window.showToast(error.message || 'Erro ao comunicar com o servidor.', true);
         } finally {
             btn.disabled = false;
-            btn.innerText = 'Enviar Solicitação';
+            btn.textContent = 'Enviar Solicitação';
         }
     });
 });

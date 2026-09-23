@@ -8,40 +8,58 @@
     <link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <h1>EMBRAPA</h1>
-        <nav>
+        <nav aria-label="Navegação principal">
             <ul>
                 <li><a href="index.html">Sobre Nós</a></li>
                 <li><a href="juntar-se.html">Juntar-se</a></li>
                 <li><a href="membros.html">Membros</a></li>
+                <li><a href="wiki.html">Wiki & Regras</a></li>
                 <li><a href="admin.html">Administração</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <div class="glass-card">
+    <main class="centered">
+        <section class="glass-card">
             <h2>Formulário de Recrutamento</h2>
-            <p>Preencha os dados abaixo para iniciar o recrutamento</p>
-            
+            <p>Preencha os dados abaixo para iniciar o recrutamento.</p>
+
             <form id="recrutamento-form">
                 <div class="form-group">
                     <label for="nick">Seu Nick no Jogo</label>
-                    <input type="text" id="nick" placeholder="Ex: Nick do Minecraft" required>
+                    <input
+                        type="text"
+                        id="nick"
+                        name="nick"
+                        maxlength="32"
+                        autocomplete="username"
+                        placeholder="Ex: Nick do Minecraft"
+                        required
+                    >
                 </div>
+
                 <div class="form-group">
                     <label for="contato">Contato (Discord / WhatsApp)</label>
-                    <input type="text" id="contato" placeholder="" required>
+                    <input
+                        type="text"
+                        id="contato"
+                        name="contato"
+                        maxlength="120"
+                        autocomplete="off"
+                        required
+                    >
                 </div>
+
                 <button type="submit" class="btn-submit">Enviar Solicitação</button>
             </form>
-        </div>
+        </section>
     </main>
 
-    <footer>
-        <a href="https://discord.gg/JsUuF7ePfX" target="_blank" class="discord-btn">
-            <img src="assets/discord-logo.svg" alt="Discord">
+    <footer class="site-footer">
+        <a href="https://discord.gg/JsUuF7ePfX" target="_blank" rel="noopener noreferrer" class="discord-btn">
+            <img src="assets/discord-logo.svg" alt="" aria-hidden="true">
             Entrar no Discord
         </a>
     </footer>

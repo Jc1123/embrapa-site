@@ -3,104 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin</title>
+    <title>Painel Admin | EMBRAPA</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pages.css">
     <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="css/pages.css"> <!-- Reuso do design do card -->
 </head>
 <body class="admin-body">
+    <div
+        id="login-modal"
+        class="modal-overlay active"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="login-title"
+        style="display:flex"
+    >
+        <div class="glass-card admin-login-card">
+            <h2 id="login-title">Área Restrita</h2>
 
-    <!-- Modal de Autenticação -->
-    <div id="login-modal" class="modal-overlay" style="display: flex;">
-        <div class="glass-card" style="background: #111; border: 1px solid #333;">
-            <h2 style="margin-bottom: 2rem;">Área Restrita</h2>
             <form id="login-form">
                 <div class="form-group">
-                    <label>Senha de Administração</label>
-                    <input type="password" id="admin-pass" required>
+                    <label for="admin-pass">Senha de Administração</label>
+                    <input
+                        type="password"
+                        id="admin-pass"
+                        name="password"
+                        autocomplete="current-password"
+                        maxlength="256"
+                        required
+                    >
                 </div>
+
                 <button type="submit" class="btn-submit">Entrar</button>
             </form>
-            <a href="index.html" style="display:block; margin-top: 1rem; color: #666; text-decoration: none; font-size: 0.9rem;">← Voltar ao site</a>
+
+            <a href="index.html" class="admin-back-link">← Voltar ao site</a>
         </div>
     </div>
 
-    <!-- Layout Dashboard -->
-    <div id="admin-panel" style="display: none; width: 100%; height: 100%;">
+    <div id="admin-panel" hidden>
         <aside class="sidebar">
             <h2>Painel Administrativo</h2>
-            <ul class="sidebar-menu">
-                <li class="active" data-target="sec-inicio">📊 Início</li>
-                <li data-target="sec-solicitacoes">📩 Solicitações</li>
-                <li data-target="sec-membros">👥 Membros</li>
+
+            <ul class="sidebar-menu" role="tablist" aria-label="Seções administrativas">
+                <li>
+                    <button type="button" class="active" data-target="sec-inicio" role="tab" aria-selected="true">
+                        📊 Início
+                    </button>
+                </li>
+                <li>
+                    <button type="button" data-target="sec-solicitacoes" role="tab" aria-selected="false">
+                        📩 Solicitações
+                    </button>
+                </li>
+                <li>
+                    <button type="button" data-target="sec-membros" role="tab" aria-selected="false">
+                        👥 Membros
+                    </button>
+                </li>
             </ul>
-            <div id="logout-btn" class="logout-btn">Sair do Painel</div>
+
+            <button type="button" id="logout-btn" class="logout-btn">Sair do Painel</button>
         </aside>
 
         <main class="admin-content">
-            
-            <!-- Sec Inicio -->
             <section id="sec-inicio" class="admin-section active">
-                <div class="section-header"><h2>Visão Geral</h2></div>
+                <div class="section-header">
+                    <h2>Visão Geral</h2>
+                </div>
+
                 <div class="metric-card">
                     <h3>Total de Solicitações</h3>
                     <div class="number" id="total-solicitacoes">...</div>
                 </div>
             </section>
 
-            <!-- Sec Solicitações -->
             <section id="sec-solicitacoes" class="admin-section">
-                <div class="section-header"><h2>Solicitações de Recrutamento</h2></div>
-                
-                <h3 style="margin: 2rem 0 1rem; color: #fff;">Pendentes</h3>
-                <table class="admin-table">
-                    <thead><tr><th>Nick</th><th>Contato</th><th>Data/Hora</th><th>Ações</th></tr></thead>
-                    <tbody id="tbody-pendentes"></tbody>
-                </table>
+                <div class="section-header">
+                    <h2>Solicitações de Recrutamento</h2>
+                </div>
 
-                <h3 style="margin: 3rem 0 1rem; color: #888;">Concluídas</h3>
-                <table class="admin-table" style="opacity: 0.7;">
-                    <thead><tr><th>Nick</th><th>Contato</th><th>Data/Hora</th><th>Ações</th></tr></thead>
-                    <tbody id="tbody-concluidas"></tbody>
-                </table>
+                <h3 class="admin-subtitle">Pendentes</h3>
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nick</th>
+                                <th>Contato</th>
+                                <th>Data/Hora</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-pendentes"></tbody>
+                    </table>
+                </div>
+
+                <h3 class="admin-subtitle muted">Concluídas</h3>
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nick</th>
+                                <th>Contato</th>
+                                <th>Data/Hora</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-concluidas"></tbody>
+                    </table>
+                </div>
             </section>
 
-            <!-- Sec Membros -->
             <section id="sec-membros" class="admin-section">
                 <div class="section-header">
                     <h2>Gestão de Membros</h2>
-                    <button id="btn-novo-membro" class="btn-success">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+
+                    <button id="btn-novo-membro" type="button" class="btn-success">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z"></path>
                         </svg>
                         Novo Membro
                     </button>
                 </div>
-                <table class="admin-table">
-                    <thead><tr><th>Nick</th><th>Cargo</th><th>Ações</th></tr></thead>
-                    <tbody id="tbody-membros"></tbody>
-                </table>
+
+                <div class="table-wrap">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nick</th>
+                                <th>Cargo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-membros"></tbody>
+                    </table>
+                </div>
             </section>
         </main>
     </div>
 
-    <!-- Modal Adicionar/Alterar Membro -->
-    <div id="modal-novo-membro" class="modal-overlay">
+    <div
+        id="modal-novo-membro"
+        class="modal-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-membro-titulo"
+        aria-hidden="true"
+    >
         <div class="modal-box">
             <h3 id="modal-membro-titulo">Adicionar Membro</h3>
+
             <form id="form-novo-membro">
-                <!-- Campo oculto para guardar o ID do membro na hora de editar -->
                 <input type="hidden" id="membro-id">
-                
+
                 <div class="form-group">
-                    <label>Nick</label>
-                    <input type="text" id="novo-nick" required>
+                    <label for="novo-nick">Nick</label>
+                    <input type="text" id="novo-nick" maxlength="32" required>
                 </div>
+
                 <div class="form-group">
-                    <label>Cargo</label>
-                    <input type="text" id="novo-cargo" required>
+                    <label for="novo-cargo">Cargo</label>
+                    <input type="text" id="novo-cargo" maxlength="40" required>
                 </div>
-                <button type="submit" id="btn-salvar-membro" class="btn-submit" style="background: var(--success-color); color: #000;">Salvar Membro</button>
+
+                <div class="form-group">
+                    <label for="input-bio">Biografia / Detalhes</label>
+                    <textarea
+                        id="input-bio"
+                        maxlength="500"
+                        rows="4"
+                        placeholder="Ex: Jogador dedicado, focado em construções..."
+                    ></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="input-data">Data de Entrada</label>
+                    <input type="date" id="input-data">
+                </div>
+
+                <button type="submit" id="btn-salvar-membro" class="btn-submit">Salvar Membro</button>
                 <button type="button" id="btn-fechar-modal" class="btn-cancel">Cancelar</button>
             </form>
         </div>

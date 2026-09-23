@@ -8,70 +8,89 @@
     <link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
-    <header>
+    <header class="site-header">
         <h1>EMBRAPA</h1>
-        <nav>
+        <nav aria-label="Navegação principal">
             <ul>
                 <li><a href="index.html">Sobre Nós</a></li>
                 <li><a href="juntar-se.html">Juntar-se</a></li>
                 <li><a href="membros.html">Membros</a></li>
+                <li><a href="wiki.html">Wiki & Regras</a></li>
                 <li><a href="admin.html">Administração</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <h2 style="margin-bottom: 1rem;">Nossos Membros</h2>
-        <div class="members-tools" style="max-width: 1000px; margin: 0 auto 2rem auto; display: flex; flex-direction: column; gap: 1rem;">
-            <input type="text" id="search-membro" placeholder="Pesquisar por nick..." style="width: 100%; padding: 1rem; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass-bg); color: white; outline: none; backdrop-filter: blur(10px);">
-            <div class="filters-container" style="display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center;" id="filters-container">
-                <button class="filter-btn active" data-cargo="Todos">Todos</button>
+    <main class="centered">
+        <h2>Nossos Membros</h2>
 
+        <section class="members-tools" aria-label="Busca e filtros de membros">
+            <label for="search-membro" class="sr-only">Pesquisar por nick</label>
+            <input
+                type="search"
+                id="search-membro"
+                class="search-input"
+                placeholder="Pesquisar por nick..."
+                autocomplete="off"
+            >
+
+            <div class="filters-container" id="filters-container">
+                <button type="button" class="filter-btn active" data-cargo="Todos">Todos</button>
             </div>
-        </div>
-        <div id="membros-grid" class="members-grid">
-            <p style="color: var(--text-secondary);">Carregando lista do servidor...</p>
-        </div>
+        </section>
+
+        <section id="membros-grid" class="members-grid" aria-live="polite">
+            <p class="empty-state">Carregando lista do servidor...</p>
+        </section>
     </main>
 
-    <footer>
-        <a href="https://discord.gg/JsUuF7ePfX" target="_blank" class="discord-btn">
-            <img src="assets/discord-logo.svg" alt="Discord">
+    <footer class="site-footer">
+        <a href="https://discord.gg/JsUuF7ePfX" target="_blank" rel="noopener noreferrer" class="discord-btn">
+            <img src="assets/discord-logo.svg" alt="" aria-hidden="true">
             Entrar no Discord
         </a>
     </footer>
 
-    <script src="js/config.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/membros.js"></script>
-
-    <!-- Modal de Perfil Detalhado -->
-    <div id="modal-perfil" class="modal-overlay">
+    <div
+        id="modal-perfil"
+        class="modal-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="perfil-nick"
+        aria-hidden="true"
+    >
         <div class="glass-card perfil-card">
-            <button id="fechar-perfil" class="btn-fechar">&times;</button>
-        
+            <button id="fechar-perfil" type="button" class="btn-fechar" aria-label="Fechar perfil">&times;</button>
+
             <div class="perfil-header">
-                <img id="perfil-skin" src="" alt="Skin" class="perfil-skin-large">
-              <div class="perfil-info">
+                <img id="perfil-skin" src="" alt="" class="perfil-skin-large">
+                <div class="perfil-info">
                     <h2 id="perfil-nick">Nick</h2>
-                   <span id="perfil-cargo" class="">Cargo</span>
-              </div>
-          </div>
-        
-        <div class="perfil-detalhes">
-            <div class="detalhe-item">
-                <strong>⚔️ Status:</strong> <span style="color: var(--success-color);">Ativo</span>
+                    <span id="perfil-cargo">Cargo</span>
+                </div>
             </div>
-            <!-- Futuramente, essas infos virão do banco de dados! -->
-            <div class="detalhe-item">
-                <strong>📅 Entrou em:</strong> <span style="color: #aaa;">Desconhecido</span>
-            </div>
-            <div class="detalhe-item">
-                <strong>📝 Sobre:</strong> 
-                <p style="color: #ccc; margin-top: 0.5rem; line-height: 1.4;">Um jogador dedicado do clã Armageddon. Mais informações serão adicionadas em breve.</p>
+
+            <div class="perfil-detalhes">
+                <div class="detalhe-item">
+                    <strong>⚔️ Status:</strong>
+                    <span class="cargo-fazendeiro">Ativo</span>
+                </div>
+
+                <div class="detalhe-item">
+                    <strong>📅 Entrou em:</strong>
+                    <span id="perfil-data">Não informada</span>
+                </div>
+
+                <div class="detalhe-item">
+                    <strong>📝 Sobre:</strong>
+                    <p id="perfil-bio">Sem biografia informada.</p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <script src="js/config.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/membros.js"></script>
 </body>
 </html>
