@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki e Regras | Armageddon</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pages.css">
+    <style>
+        /* Estilos exclusivos da Wiki para manter o projeto limpo */
+        .wiki-container { max-width: 900px; margin: 3rem auto; padding: 0 1.5rem; }
+        .wiki-section { margin-bottom: 3rem; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 12px; padding: 2rem; }
+        .wiki-section h2 { color: var(--accent-color); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+        .cargo-list { display: flex; flex-direction: column; gap: 1rem; }
+        .cargo-item { display: flex; align-items: center; gap: 1rem; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--text-secondary); }
+        .rules-list { list-style-position: inside; color: #ccc; line-height: 1.8; }
+        .rules-list li { margin-bottom: 0.8rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">Armageddon</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Sobre Nós</a></li>
+            <li><a href="juntar-se.html">Juntar-se</a></li>
+            <li><a href="membros.html">Membros</a></li>
+            <li><a href="wiki.html" class="active">Wiki & Regras</a></li>
+            <li><a href="admin.html" class="btn-admin">Administração</a></li>
+        </ul>
+    </nav>
+
+    <main class="wiki-container">
+        <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem;">Wiki Oficial</h1>
+        
+        <section class="wiki-section">
+            <h2>📜 Regras do Clã</h2>
+            <ul class="rules-list">
+                <li><strong>Respeito acima de tudo:</strong> Trate todos os membros com respeito. O uso de ofensas gratuitas ou preconceito resultará em expulsão.</li>
+                <li><strong>Organização das Farms:</strong> Não destrua ou modifique as construções e farms da área comum sem permissão de um Líder ou Builder.</li>
+                <li><strong>Baús Comunitários:</strong> Reponha o que pegar. Se esvaziar um baú, avise os responsáveis (Fazendeiros/Mineradores) no Discord.</li>
+                <li><strong>Inatividade:</strong> Membros inativos por mais de 30 dias sem aviso prévio perderão o cargo.</li>
+            </ul>
+        </section>
+
+        <section class="wiki-section">
+            <h2>👑 Hierarquia e Cargos</h2>
+            <p style="color: #aaa; margin-bottom: 1.5rem;">Entenda as funções de cada cargo dentro do nosso clã no servidor armamc.com.</p>
+            
+            <div class="cargo-list">
+                <!-- Você deve configurar a cor da borda (border-color) para combinar com a cor do cargo! -->
+                <div class="cargo-item" style="border-color: #ffd700;">
+                    <strong style="color: #ffd700; width: 120px;">Líder</strong>
+                    <span style="color: #ccc;">Administradores do clã. Tomam as decisões finais e gerenciam as alianças.</span>
+                </div>
+                
+                <div class="cargo-item" style="border-color: #4ade80;">
+                    <strong style="color: #4ade80; width: 120px;">Builder</strong>
+                    <span style="color: #ccc;">Responsáveis pelos projetos de arquitetura e decoração da nossa base.</span>
+                </div>
+                
+                <div class="cargo-item" style="border-color: #2dd4bf;">
+                    <strong style="color: #2dd4bf; width: 120px;">Minerador</strong>
+                    <span style="color: #ccc;">Garante os recursos brutos para o clã. Exploram cavernas e buscam minérios raros.</span>
+                </div>
+                
+                <!-- Adicione os outros cargos copiando a div .cargo-item e mudando as cores! -->
+                <div class="cargo-item" style="border-color: #777;">
+                    <strong style="color: #777; width: 120px;">Recruta</strong>
+                    <span style="color: #ccc;">Membros recém-chegados. Estão em período de testes.</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Não esqueça de adicionar o link da "Wiki" nas "nav-links" dos seus outros arquivos HTML (index, membros, juntar-se) -->
+</body>
+</html>

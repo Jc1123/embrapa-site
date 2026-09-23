@@ -44,5 +44,34 @@
     <script src="js/config.js"></script>
     <script src="js/main.js"></script>
     <script src="js/membros.js"></script>
+
+    <!-- Modal de Perfil Detalhado -->
+    <div id="modal-perfil" class="modal-overlay">
+        <div class="glass-card perfil-card">
+            <button id="fechar-perfil" class="btn-fechar">&times;</button>
+        
+            <div class="perfil-header">
+                <img id="perfil-skin" src="" alt="Skin" class="perfil-skin-large">
+              <div class="perfil-info">
+                    <h2 id="perfil-nick">Nick</h2>
+                   <span id="perfil-cargo" class="">Cargo</span>
+              </div>
+          </div>
+        
+        <div class="perfil-detalhes">
+            <div class="detalhe-item">
+                <strong>⚔️ Status:</strong> <span style="color: var(--success-color);">Ativo</span>
+            </div>
+            <!-- Futuramente, essas infos virão do banco de dados! -->
+            <div class="detalhe-item">
+                <strong>📅 Entrou em:</strong> <span style="color: #aaa;">Desconhecido</span>
+            </div>
+            <div class="detalhe-item">
+                <strong>📝 Sobre:</strong> 
+                <p style="color: #ccc; margin-top: 0.5rem; line-height: 1.4;">Um jogador dedicado do clã Armageddon. Mais informações serão adicionadas em breve.</p>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

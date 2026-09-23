@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         lista.forEach(membro => {
             const card = document.createElement('div');
             card.className = 'member-card';
+            card.style.cursor = 'pointer'; // Torna visível que o card é clicável
             
             const skinImg = document.createElement('img');
             skinImg.src = `https://mc-heads.net/avatar/${encodeURIComponent(membro.nick)}/80`;
@@ -71,6 +72,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             card.appendChild(skinImg);
             card.appendChild(h3);
             card.appendChild(span);
+            
+            // --- EVENTO CLIQUE PARA ABRIR PERFIL ---
+            card.addEventListener('click', () => abrirPerfilModal(membro, skinImg.src, span.className));
+            
             grid.appendChild(card);
         });
     }
@@ -97,7 +102,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 e.target.classList.add('active');
 
                 const cargoSelecionado = e.target.dataset.cargo;
-                filtrarLista(searchInput.value, cargoSelecionado);
+                filtrarLista(searchInput ? searchInput.value : '', cargoSelecionado);
             });
         });
     }
@@ -112,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Filtra por Nick (Busca)
-        if (termoBusca.trim() !== '') {
+        if (termoBusca && termoBusca.trim() !== '') {
             const termo = termoBusca.toLowerCase();
             listaFiltrada = listaFiltrada.filter(m => m.nick.toLowerCase().includes(termo));
         }
@@ -123,8 +128,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- EVENTO DE DIGITAÇÃO NA BUSCA ---
     if(searchInput) {
         searchInput.addEventListener('input', (e) => {
-            const cargoAtivo = document.querySelector('.filter-btn.active').dataset.cargo;
+            const activeBtn = document.querySelector('.filter-btn.active');
+            const cargoAtivo = activeBtn ? activeBtn.dataset.cargo : 'Todos';
             filtrarLista(e.target.value, cargoAtivo);
+        });
+    }
+
+    // ==========================================
+    // --- LÓGICA DO MODAL DE PERFIL (FASE 2) ---
+    // ==========================================
+    const modalPerfil = document.getElementById('modal-perfil');
+    const btnFecharPerfil = document.getElementById('fechar-perfil');
+
+    function abrirPerfilModal(membro, skinUrl, cssClass) {
+        if (!modalPerfil) return; // Segurança caso o HTML do modal ainda não exista
+        
+        document.getElementById('perfil-skin').src = skinUrl;
+        document.getElementById('perfil-nick').textContent = membro.nick;
+        
+        const spanCargo = document.getElementById('perfil-cargo');
+        spanCargo.textContent = membro.cargo;
+        spanCargo.className = cssClass; // Usa a mesma cor gerada pro card
+
+        modalPerfil.classList.add('active');
+    }
+
+    if(btnFecharPerfil) {
+        btnFecharPerfil.addEventListener('click', () => modalPerfil.classList.remove('active'));
+    }
+    
+    // Fechar ao clicar fora do card (no fundo escuro)
+    if(modalPerfil) {
+        modalPerfil.addEventListener('click', (e) => {
+            if (e.target === modalPerfil) modalPerfil.classList.remove('active');
         });
     }
 });
