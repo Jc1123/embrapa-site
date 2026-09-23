@@ -7,13 +7,35 @@ import {
     setNoStore
 } from './_utils.js';
 
+const CARGOS_VALIDOS = new Set([
+    'Fundador',
+    'Líder',
+    'Builder',
+    'Fazendeiro',
+    'Britadeira',
+    'Minerador',
+    'Rasante',
+    'Slayer',
+    'Pescador',
+    'Alquimista',
+    'Dragão',
+    'Farmer',
+    'Recruta'
+]);
+
 function parseMember(body = {}) {
     const nick = normalizeText(body.nick, { min: 1, max: 32 });
     const cargo = normalizeText(body.cargo, { min: 1, max: 40 });
     const bio = normalizeText(body.bio ?? '', { min: 0, max: 500 });
     const dataEntrou = normalizeText(body.data_entrou ?? '', { min: 0, max: 20 });
 
-    if (!nick || !cargo || bio === null || dataEntrou === null) {
+    if (
+        !nick ||
+        !cargo ||
+        !CARGOS_VALIDOS.has(cargo) ||
+        bio === null ||
+        dataEntrou === null
+    ) {
         return null;
     }
 

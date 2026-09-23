@@ -401,8 +401,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         trigger.addEventListener('click', event => {
             event.stopPropagation();
+
             const shouldOpen = !wrapper.classList.contains('open');
             closeAllActionMenus();
+
+            if (shouldOpen) {
+                const rect = trigger.getBoundingClientRect();
+                const estimatedMenuHeight = Math.max(52, actions.length * 44 + 8);
+                const spaceBelow = window.innerHeight - rect.bottom;
+                const spaceAbove = rect.top;
+
+                wrapper.classList.toggle(
+                    'open-up',
+                    spaceBelow < estimatedMenuHeight && spaceAbove > spaceBelow
+                );
+            }
 
             wrapper.classList.toggle('open', shouldOpen);
             trigger.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
@@ -414,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeAllActionMenus() {
         document.querySelectorAll('.action-menu.open').forEach(menu => {
-            menu.classList.remove('open');
+            menu.classList.remove('open', 'open-up');
             menu.querySelector('.action-trigger')?.setAttribute('aria-expanded', 'false');
         });
     }
