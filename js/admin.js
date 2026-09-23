@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminPanel = document.getElementById('admin-panel');
     const loginForm = document.getElementById('login-form');
     
-    // Verificar Sessão (Usa o cookie HttpOnly enviando credentials)
+    // Verificar Sessão
     async function checkSession() {
         try {
             const res = await fetch(`${window.API_BASE}/check-auth`, { method: 'GET' });
@@ -68,7 +68,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Carregar Dados Dashboard
     async function initDashboard() {
         loadSolicitacoesStats();
     }
@@ -145,23 +144,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         tbody.innerHTML = '';
         data.forEach(item => {
             const tr = document.createElement('tr');
-            // Proteção para garantir que as aspas não quebrem a função ao passar strings com apóstrofos/espaços
-            const bioSegura = (item.bio || '').replace(/'/g, "\\'");
-            const dataSegura = (item.data_entrou || '').replace(/'/g, "\\'");
-
             tr.innerHTML = `
                 <td>${item.nick}</td>
                 <td>${item.cargo}</td>
                 <td>
                     <div class="action-menu">⋮
                         <div class="action-dropdown">
-                            <div onclick="abrirModalEdicao('${item.id}', '${item.nick}', '${item.cargo}', '${bioSegura}', '${dataSegura}')">Alterar</div>
+                            <div class="btn-editar" 
+                                data-id="${item.id}" 
+                                data-nick="${item.nick}" 
+                                data-cargo="${item.cargo}" 
+                                data-bio="${item.bio || ''}" 
+                                data-data="${item.data_entrou || ''}">
+                                Alterar
+                            </div>
                             <div class="text-danger" onclick="deleteMembro('${item.id}')">Excluir</div>
                         </div>
                     </div>
                 </td>
             `;
             tbody.appendChild(tr);
+        });
+
+        // Evento de clique seguro para os botões Alterar gerados dinamicamente
+        document.querySelectorAll('.btn-editar').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const ds = e.currentTarget.dataset;
+                abrirModalEdicao(ds.id, ds.nick, ds.cargo, ds.bio, ds.data);
+            });
         });
     }
 
@@ -175,7 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Modal de Novo/Alterar Membro
     const modalNovoMembro = document.getElementById('modal-novo-membro');
     
-    // Abrir Modal para ADICIONAR (Zera os campos e o ID)
+    // Abrir Modal para ADICIONAR
     document.getElementById('btn-novo-membro').addEventListener('click', () => {
         document.getElementById('modal-membro-titulo').innerText = 'Adicionar Membro';
         document.getElementById('form-novo-membro').reset();
@@ -183,28 +193,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         modalNovoMembro.classList.add('active');
     });
 
-    // Função global para abrir Modal para ALTERAR (Preenche os campos e o ID)
-    window.abrirModalEdicao = (id, nick, cargo, bio, dataEntrou) => {
+    // Função para abrir Modal para ALTERAR
+    function abrirModalEdicao(id, nick, cargo, bio, dataEntrou) {
         document.getElementById('modal-membro-titulo').innerText = 'Alterar Membro';
         document.getElementById('membro-id').value = id;
         document.getElementById('novo-nick').value = nick;
         document.getElementById('novo-cargo').value = cargo;
-        document.getElementById('input-bio').value = bio && bio !== 'undefined' ? bio : '';
-        document.getElementById('input-data').value = dataEntrou && dataEntrou !== 'undefined' ? dataEntrou : '';
+        
+        // Atribuindo valores aos campos corretos do seu HTML
+        document.getElementById('input-bio').value = bio && bio !== 'null' ? bio : '';
+        document.getElementById('input-data').value = dataEntrou && dataEntrou !== 'null' ? dataEntrou : '';
+        
         modalNovoMembro.classList.add('active');
-    };
+    }
 
-    // Fechar Modal cancelando a operação
+    // Fechar Modal
     document.getElementById('btn-fechar-modal').addEventListener('click', () => modalNovoMembro.classList.remove('active'));
 
-    // Lógica do botão Salvar (Decide entre Criar e Atualizar)
+    // Lógica do botão Salvar (Incluindo Bio e Data)
     document.getElementById('form-novo-membro').addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('membro-id').value;
         const btn = document.getElementById('btn-salvar-membro');
         btn.disabled = true;
 
-        // Estrutura com os campos novos solicitados
         const dadosMembro = {
             nick: document.getElementById('novo-nick').value,
             cargo: document.getElementById('novo-cargo').value,
@@ -212,7 +224,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             data_entrou: document.getElementById('input-data').value
         };
 
-        // Se tem ID, adicionamos no objeto para a API saber quem atualizar via PUT
         if (id) {
             dadosMembro.id = id;
         }
@@ -230,13 +241,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('form-novo-membro').reset();
             document.getElementById('membro-id').value = '';
             modalNovoMembro.classList.remove('active');
-            loadMembros(); // Atualiza a tabela do painel na hora
+            loadMembros();
         } else {
             window.showToast('Erro ao salvar membro', true);
         }
         btn.disabled = false;
     });
 
-    // Inicia verificação ao carregar a tela de admin
     checkSession();
 });
