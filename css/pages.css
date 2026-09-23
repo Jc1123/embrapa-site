@@ -68,3 +68,30 @@
 .member-card span.cargo-dragao     { color: #b84659; }
 .member-card span.cargo-farmer     { color: #a3e635; }
 .member-card span.cargo-recruta    { color: var(--text-secondary); } /* Mantém a cor padrão cinza */
+
+.filter-btn {
+    background: rgba(255, 255, 255, 0.05); border: 1px solid #333; color: var(--text-secondary);
+    padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; transition: all 0.3s;
+}
+.filter-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
+.filter-btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); font-weight: bold; }
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+    0% { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+.skeleton-card {
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center;
+}
+.skeleton-img, .skeleton-text, .skeleton-badge {
+    background: #222;
+    background-image: linear-gradient(90deg, #222 0px, #333 40px, #222 80px);
+    background-size: 800px 100%;
+    animation: shimmer 2s infinite linear;
+    border-radius: 4px;
+}
+.skeleton-img { width: 80px; height: 80px; border-radius: 8px; margin-bottom: 1rem; }
+.skeleton-text { width: 60%; height: 20px; margin-bottom: 0.5rem; }
+.skeleton-badge { width: 40%; height: 25px; border-radius: 15px; }
